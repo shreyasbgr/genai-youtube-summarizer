@@ -16,20 +16,22 @@ important details of the video as a summary, using points wherever possible. The
 import re
 
 def extract_video_id(youtube_url):
-    # Remove extra query parameters or fragments
-    youtube_url = youtube_url.split('&')[0]
-    youtube_url = youtube_url.split('?')[0]
-    
     # Regular expressions to match the video ID in different URL formats
     pc_pattern = r"(?:https?:\/\/)?(?:www\.)?youtube\.com\/watch\?v=([a-zA-Z0-9_-]{11})"
     mobile_pattern = r"(?:https?:\/\/)?(?:www\.)?youtu\.be\/([a-zA-Z0-9_-]{11})"
     
-    match = re.match(pc_pattern, youtube_url) or re.match(mobile_pattern, youtube_url)
+    # Try to match the PC URL format
+    pc_match = re.search(pc_pattern, youtube_url)
+    if pc_match:
+        return pc_match.group(1)
     
-    if match:
-        return match.group(1)
-    else:
-        raise ValueError("Invalid YouTube URL format")
+    # Try to match the mobile URL format
+    mobile_match = re.search(mobile_pattern, youtube_url)
+    if mobile_match:
+        return mobile_match.group(1)
+    
+    # If no matches, raise an error
+    raise ValueError("Invalid YouTube URL format")
 
 def generate_gemini_content(transcript_text,input_prompt):
     model = genai.GenerativeModel('gemini-1.5-pro')
