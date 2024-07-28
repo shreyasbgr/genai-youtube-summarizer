@@ -12,6 +12,21 @@ transcript text and summarizing the entire video and providing the
 important details of the video as a summary, using points wherever possible. The transcript text is as follows:
 
 """
+
+import re
+
+def extract_video_id(youtube_url):
+    # Regular expressions to match the video ID in different URL formats
+    pc_pattern = r"(?:https?:\/\/)?(?:www\.)?youtube\.com\/watch\?v=([a-zA-Z0-9_-]{11})"
+    mobile_pattern = r"(?:https?:\/\/)?(?:www\.)?youtu\.be\/([a-zA-Z0-9_-]{11})"
+
+    match = re.match(pc_pattern, youtube_url) or re.match(mobile_pattern, youtube_url)
+    
+    if match:
+        return match.group(1)
+    else:
+        raise ValueError("Invalid YouTube URL format")
+
 def generate_gemini_content(transcript_text,input_prompt):
     model = genai.GenerativeModel('gemini-1.5-pro')
     response = model.generate_content(input_prompt + transcript_text)
@@ -20,7 +35,7 @@ def generate_gemini_content(transcript_text,input_prompt):
 # Use youtube_transcript_api to take a youtube video url and get it's transcript
 def fetch_transcript_details(youtube_url):
     try:
-        video_id = youtube_url.split("v=")[-1]
+        video_id = extract_video_id(youtube_url)
         
         # Attempt to fetch the transcript in English first
         try:
@@ -44,7 +59,7 @@ st.subheader("Youtube Video Summarizer")
 youtube_link = st.text_input("Enter the Youtube Video Link")
 
 if youtube_link:
-    video_id = youtube_link.split("=")[-1]
+    video_id = extract_video_id(youtube_link)
     # Display the video thumbnail
     st.image(f"https://img.youtube.com/vi/{video_id}/0.jpg", use_column_width=True)
     
