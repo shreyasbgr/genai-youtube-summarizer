@@ -40,7 +40,8 @@ def fetch_transcript_details(youtube_url):
         return f"Error fetching transcript: {e}"
 
 st.set_page_config(page_title="Youtube Video Summarizer")
-youtube_link = st.text_input("Enter Youtube Video Link")
+st.subheader("Welcome to Youtube Video Summarizer. Please enter the YouTube video link below.")
+youtube_link = st.text_input("Enter the Youtube Video Link")
 
 if youtube_link:
     video_id = youtube_link.split("=")[-1]
