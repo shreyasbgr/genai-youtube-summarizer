@@ -16,10 +16,14 @@ important details of the video as a summary, using points wherever possible. The
 import re
 
 def extract_video_id(youtube_url):
+    # Remove extra query parameters or fragments
+    youtube_url = youtube_url.split('&')[0]
+    youtube_url = youtube_url.split('?')[0]
+    
     # Regular expressions to match the video ID in different URL formats
     pc_pattern = r"(?:https?:\/\/)?(?:www\.)?youtube\.com\/watch\?v=([a-zA-Z0-9_-]{11})"
     mobile_pattern = r"(?:https?:\/\/)?(?:www\.)?youtu\.be\/([a-zA-Z0-9_-]{11})"
-
+    
     match = re.match(pc_pattern, youtube_url) or re.match(mobile_pattern, youtube_url)
     
     if match:
