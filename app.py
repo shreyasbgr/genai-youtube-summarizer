@@ -9,7 +9,7 @@ genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
 input_prompt = """
 You are a Youtube video summarizer. You will be taking the
 transcript text and summarizing the entire video and providing the
-important details of the video as a summary, using points wherever possible. The transcript text is as follows:
+entire details of the video as a summary, using points wherever possible. Give detailed information of the video, ensure no information is left out from the video. The transcript text is as follows:
 
 """
 
